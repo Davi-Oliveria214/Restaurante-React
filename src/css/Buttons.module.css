@@ -1,0 +1,39 @@
+:root {
+    --amarelo-1: #faa307;
+    --amarelo-2: #f48c06;
+
+    --vermelho-1: #d00000;
+    --vermelho-2: #9d0208;
+    --vermelho-3: #6a040f;
+    --vermelho-4: #38040e;
+
+    --branco: #ffff;
+    --preto: #03071e;
+    --cinza: #ced4da;
+}
+
+.button {
+    font-weight: 700;
+    font-size: 1rem;
+    padding: 3px;
+    color: var(--preto);
+    border: solid 2px black;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.4s ease;
+}
+
+.btnAgendar {
+    --cor-btn: rgb(23, 153, 23);
+    background-color: rgb(15, 114, 15);
+}
+
+.btnDetalhes {
+    --cor-btn: var(--amarelo-1);
+    background-color: var(--amarelo-2);
+}
+
+.button:hover {
+    background-color: var(--cor-btn);
+    transform: translateY(-4px);
+}
