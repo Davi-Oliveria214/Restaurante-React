@@ -28,6 +28,10 @@ public class AgendamentoEntity {
     @JoinColumn(name = "mesa", nullable = false, referencedColumnName = "numero_mesa")
     private MesaEntity mesa;
 
+    @ManyToOne
+    @JoinColumn(name = "usuario_id", nullable = false)
+    private UsuarioEntity usuario;
+
     public AgendamentoEntity() {
     }
 
@@ -61,5 +65,13 @@ public class AgendamentoEntity {
 
     public void setMesa(MesaEntity mesa) {
         this.mesa = mesa;
+    }
+
+    public UsuarioEntity getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(UsuarioEntity usuario) {
+        this.usuario = usuario;
     }
 }
