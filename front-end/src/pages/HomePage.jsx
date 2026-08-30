@@ -1,6 +1,6 @@
 import styles from '../css/HomePage.module.css'
-import Carrossel from '../components/Carrossel'
-import Banner from '../components/Banner'
+import Carrossel from '../components/Carrossel.jsx'
+import Banner from '../components/Banner.jsx'
 
 export function HomePage() {
     return (
