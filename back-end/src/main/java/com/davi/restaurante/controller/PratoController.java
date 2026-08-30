@@ -29,7 +29,7 @@ public class PratoController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<PratoResponseRecord> apagar(@PathVariable Long id) {
-        return ResponseEntity.status(200).body(this.pratoService.apagar(id));
+        return ResponseEntity.status(HttpStatus.OK).body(this.pratoService.apagar(id));
     }
 
     @GetMapping("/{id}")

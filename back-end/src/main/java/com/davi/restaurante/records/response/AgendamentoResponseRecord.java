@@ -6,10 +6,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.LocalDateTime;
 
-public record AgendamentoResponseRecord(Long id, LocalDateTime data, int duracao,
+public record AgendamentoResponseRecord(Long userId, Long agendamentoId, LocalDateTime data, int duracao,
                                         @JsonProperty("mesa") MesaResponseRecord mesa) {
-
     public AgendamentoResponseRecord(AgendamentoEntity a) {
-        this(a.getId(), a.getData(), a.getDuracao(), new MesaResponseRecord(a.getId(), a.getMesa().getNumero()));
+        this(a.getUsuario().getId(), a.getId(), a.getData(), a.getDuracao(), new MesaResponseRecord(a.getMesa().getId(), a.getMesa().getNumero()));
     }
 }

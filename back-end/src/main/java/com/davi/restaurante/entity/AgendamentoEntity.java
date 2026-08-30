@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Table(name = "agendamentos", uniqueConstraints = {
         @UniqueConstraint(
                 name = "unique_data_mesa",
-                columnNames = {"data_agendada", "mesa"}
+                columnNames = {"data_agendada", "mesa_id"}
         )
 })
 public class AgendamentoEntity {
@@ -25,7 +25,7 @@ public class AgendamentoEntity {
     private int duracao;
 
     @ManyToOne
-    @JoinColumn(name = "mesa", nullable = false, referencedColumnName = "numero_mesa")
+    @JoinColumn(name = "mesa_id", nullable = false)
     private MesaEntity mesa;
 
     @ManyToOne

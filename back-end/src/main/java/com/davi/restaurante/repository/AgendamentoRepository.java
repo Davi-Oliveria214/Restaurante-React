@@ -13,8 +13,8 @@ public interface AgendamentoRepository extends JpaRepository<AgendamentoEntity, 
     @Query(nativeQuery = true, value =
             "SELECT EXISTS(" +
                     "  SELECT 1 FROM agendamentos a " +
-                    "  INNER JOIN mesa m ON a.mesa = m.numero_mesa " +
-                    "  WHERE m.numero_mesa = :numeroMesa " +
+                    "  INNER JOIN mesa m ON a.mesa_id = m.id " +
+                    "  WHERE m.id = :mesaId " +
                     "  AND (:id IS NULL OR a.id <> :id) " +
                     "  AND a.data_agendada < :fim " +
                     "  AND (a.data_agendada + (a.duracao || ' minutes')::interval) > :inicio" +
@@ -22,19 +22,22 @@ public interface AgendamentoRepository extends JpaRepository<AgendamentoEntity, 
     boolean existeConflitoNoAgendamento(
             @Param("inicio") LocalDateTime inicio,
             @Param("fim") LocalDateTime fim,
-            @Param("numeroMesa") Integer numeroMesa,
+            @Param("mesaId") Long mesaId,
             @Param("id") Long id
     );
 
     @Query(value = "SELECT a.* " +
             "FROM agendamentos a " +
-            "INNER JOIN mesa m ON a.mesa = m.numero_mesa " +
+            "INNER JOIN mesa m ON a.mesa_id = m.id " +
             "WHERE a.data_agendada BETWEEN :inicioDoDia AND :fimDoDia " +
-            "AND m.numero_mesa = :numeroMesa",
+            "AND m.id = :mesaId AND a.usuario_id = :userId",
             nativeQuery = true)
     List<AgendamentoEntity> findAgendamentosDoDia(
             @Param("inicioDoDia") LocalDateTime inicioDoDia,
             @Param("fimDoDia") LocalDateTime fimDoDia,
-            @Param("numeroMesa") Integer numeroMesa
+            @Param("mesaId") Long mesaId,
+            @Param("userId") Long id
     );
+
+    List<AgendamentoEntity> findByUsuarioId(Long userId);
 }
