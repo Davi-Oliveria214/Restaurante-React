@@ -1,9 +1,8 @@
 package com.davi.restaurante.entity;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 
-import java.sql.Timestamp;
+import java.time.Instant;
 
 @Entity
 @Table(name = "pratos")
@@ -15,7 +14,9 @@ public class PratoEntity {
     private String nome;
     private String descricao;
     private Double preco;
-    private Timestamp dataCriacao = new Timestamp(System.currentTimeMillis());
+
+    @Column(name = "criado_em", nullable = false, updatable = false)
+    private Instant criado;
 
     public PratoEntity() {
     }
@@ -59,12 +60,16 @@ public class PratoEntity {
         this.preco = preco;
     }
 
-    public Timestamp getDataCriacao() {
-        return dataCriacao;
+    @PrePersist
+    private void onCreate() {
+        this.criado = Instant.now();
     }
 
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    public void setDataCriacao(Timestamp dataCriacao) {
-        this.dataCriacao = dataCriacao;
+    public Instant getCriado() {
+        return criado;
+    }
+
+    public void setCriado(Instant criado) {
+        this.criado = criado;
     }
 }

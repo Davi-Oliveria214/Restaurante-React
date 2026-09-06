@@ -2,6 +2,8 @@ package com.davi.restaurante.entity;
 
 import jakarta.persistence.*;
 
+import java.time.Instant;
+
 @Entity
 @Table(name = "mesa")
 public class MesaEntity {
@@ -11,6 +13,9 @@ public class MesaEntity {
 
     @Column(unique = true, name = "numero_mesa")
     private Integer numero;
+
+    @Column(name = "criado_em", nullable = false, updatable = false)
+    private Instant criado;
 
     public MesaEntity() {
     }
@@ -29,5 +34,18 @@ public class MesaEntity {
 
     public void setNumero(Integer numero) {
         this.numero = numero;
+    }
+
+    @PrePersist
+    private void onCreate() {
+        this.criado = Instant.now();
+    }
+
+    public Instant getCriado() {
+        return criado;
+    }
+
+    public void setCriado(Instant criado) {
+        this.criado = criado;
     }
 }

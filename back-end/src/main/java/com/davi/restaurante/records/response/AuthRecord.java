@@ -1,9 +1,12 @@
 package com.davi.restaurante.records.response;
 
 import com.davi.restaurante.entity.UsuarioEntity;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-public record AuthRecord(Long id, String nome, String email) {
+import java.time.Instant;
+
+public record AuthRecord(Long id, String nome, String email, @JsonProperty("criado_em") Instant criado) {
     public AuthRecord(UsuarioEntity user) {
-        this(user.getId(), user.getNome(), user.getEmail());
+        this(user.getId(), user.getNome(), user.getEmail(), user.getCriado());
     }
 }

@@ -15,12 +15,20 @@ import org.springframework.stereotype.Service;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.time.Duration;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalUnit;
 import java.util.HexFormat;
 
 @Service
 public class UsuarioService {
     @Autowired
     private UsuarioRepository repository;
+
+    // Máxima de Tentativas
+    private final int MAX_TENTATIVAS = 5;
 
     public UsuarioService() {
     }
@@ -41,10 +49,36 @@ public class UsuarioService {
     public AuthRecord login(LoginRecord record) {
         UsuarioEntity user = this.repository.findByEmail(record.email()).orElseThrow(() -> new UsuarioException("Nenhum usuário encontrado", HttpStatus.UNAUTHORIZED));
 
-        String pass = hashPassWord(record.senha());
-        if (!user.getSenha().equals(pass))
-            throw new UsuarioException("Email ou senha inválidos", HttpStatus.UNAUTHORIZED);
+        Instant hora = Instant.now();
 
+        if (user.getBloqueio() != null && hora.isAfter(user.getBloqueio())) {
+            this.setBloqueio(user, 0, null);
+        }
+
+        if (user.getTentativas() >= MAX_TENTATIVAS) {
+            if (user.getBloqueio() == null) {
+                this.setBloqueio(user, MAX_TENTATIVAS, this.setTempoBloqueio());
+            }
+
+            Duration tempo = Duration.between(hora, user.getBloqueio());
+
+            throw new UsuarioException("Máximo de tentativas excedidas. Tempo restante de bloqueio: " + tempo.toMinutes(), HttpStatus.UNAUTHORIZED);
+        }
+
+        String pass = hashPassWord(record.senha());
+        if (!user.getSenha().equals(pass)) {
+            int tentativas = user.getTentativas() + 1;
+
+            if (tentativas >= MAX_TENTATIVAS) {
+                this.setBloqueio(user, MAX_TENTATIVAS, this.setTempoBloqueio());
+            } else {
+                this.setBloqueio(user, tentativas, user.getBloqueio());
+            }
+
+            throw new UsuarioException("Email ou senha inválidos. Tentativas feitas: " + tentativas, HttpStatus.UNAUTHORIZED);
+        }
+
+        this.setBloqueio(user, 0, null);
         return new AuthRecord(user);
     }
 
@@ -64,5 +98,16 @@ public class UsuarioService {
         }
 
         return HexFormat.of().formatHex(passHash.digest(senha.getBytes(StandardCharsets.UTF_8)));
+    }
+
+    private void setBloqueio(UsuarioEntity user, int tentativas, Instant bloqueio) {
+        user.setTentativas(tentativas);
+        user.setBloqueio(bloqueio);
+        this.repository.save(user);
+    }
+
+    private Instant setTempoBloqueio() {
+        final long BLOQUEIO = 16;
+        return Instant.now().plus(BLOQUEIO, ChronoUnit.MINUTES);
     }
 }
