@@ -1,5 +1,5 @@
 import axios from 'axios'
-const URL_API = 'http://localhost:8080/api'
+const URL_API = 'http://localhost:8080/api/pratos'
 
 export async function getPratos() {
     const resp = await axios.get(URL_API)
