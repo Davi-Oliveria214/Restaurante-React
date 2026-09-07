@@ -12,6 +12,20 @@
     --color-branco: #ffff;
     --color-preto: #03071e;
     --color-cinza: #ced4da;
+
+    @keyframes setas {
+        0% {
+            transform: translateX(var(--seta));
+            opacity: 0;
+        }
+
+        100% {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+
+    --animate-setas: setas 0.7s ease-out forwards;
 }
 
 @utility filtro-imagem {
