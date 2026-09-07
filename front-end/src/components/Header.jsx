@@ -1,28 +1,44 @@
-import styles from '../css/Header.module.css'
 import cadastro from '../assets/icons/cadastro.png'
 import login from '../assets/icons/login.png'
 import home from '../assets/icons/home.png'
 import { useState } from 'react'
 
+const burguer = 'flex flex-col fixed top-[2%] right-4 p-[8px_5px] gap-1 border-4 rounded-full transition-all duration-350 ease-in md:hidden pointer-events-auto z-100'
+
+const menu = 'flex flex-col justify-evenly pointer-events-auto bg-vermelho-500 w-38 h-full -translate-x-42 duration-800 transform ease-in overflow-hidden md:translate-0 md:w-17.5 md:[&>li>p]:hidden md:duration-400 md:hover:w-40 md:hover:[&>li>p]:flex'
+
 export default function Header() {
     let [isMenu, setMenu] = useState(false)
 
-    function ativarMenu() {
+    function ativarMenu(e) {
+        console.log(e)
         setMenu(!isMenu)
     }
 
     return (
-        <header className={`${styles.header} ${isMenu ? styles.ativo : ''}`} onClick={ativarMenu}>
-            <div className={`${styles.burguer} ${isMenu ? styles.ativo : ''}`} onClick={ativarMenu}>
-                <div></div>
-                <div></div>
-                <div></div>
+        <header className={`header z-80 h-screen fixed md:static md:w-17.5 ${isMenu ? 'w-screen bg-[rgba(0,0,0,0.4)] pointer-events-auto' : 'pointer-events-none'}`} onClick={ativarMenu}>
+            <div className={`${burguer} ${isMenu ? 'border-laranja-500 [&>div]:bg-laranja-400 ' : 'border-vermelho-500 '}`} onClick={ativarMenu}>
+                <Barra />
+                <Barra />
+                <Barra />
             </div>
-            <ul className={`${styles.menu} ${isMenu ? styles.ativo : ''}`}>
-                <li><img src={home} alt="" /><p>Inicio</p></li>
-                <li><img src={cadastro} alt="" /><p>Cadastrar</p></li>
-                <li><img src={login} alt="" /><p>Logar</p></li>
+            <ul className={`group ${menu} ${isMenu ? 'translate-x-0' : ''}`} onClick={(e) => e.stopPropagation()}>
+                <Item img={home} texto={"home"} />
+                <Item img={login} texto={"login"} />
+                <Item img={cadastro} texto={"cadastro"} />
             </ul>
         </header>
+    )
+}
+
+function Item({ img, texto }) {
+    return (
+        <li className='flex justify-center text-center text-branco filtro-imagem text-[1.4rem] gap-2 cursor-pointer'><img src={img} alt={texto} className='w-8 z-0' /><p className='group-hover:flex capitalize pointer-events-auto'>{texto}</p></li>
+    )
+}
+
+function Barra() {
+    return (
+        <div className='w-7.5 h-1 bg-vermelho-400 rounded-sm transition-all duration-350 ease-in'></div>
     )
 }

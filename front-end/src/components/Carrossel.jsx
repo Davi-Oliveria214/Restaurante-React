@@ -7,12 +7,12 @@ export default function Carrossel() {
     const [resp, setResp] = useState([])
 
     useEffect(() => {
-        const request = async () => {
-            const res = await getPratos()
-            setResp(res.data)
-        }
+        // const request = async () => {
+        //     const res = await getPratos()
+        //     setResp(res.data)
+        // }
 
-        request()
+        // request()
     }, [])
 
     return (
